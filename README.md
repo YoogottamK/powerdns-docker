@@ -1,5 +1,5 @@
 # powerdns-docker
-PowerDNS on docker with admin web interface.
+[PowerDNS](https://www.powerdns.com/) on docker with admin web interface.
 
 ## Instructions
 1. Clone this repository
