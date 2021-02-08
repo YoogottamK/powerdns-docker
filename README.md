@@ -25,7 +25,7 @@ docker-compose up -d
  - Some options are configurable via the `.env` file.  
 ### PowerDNS
 To configure powerdns, check out:
- - [ngoduykhanh/PowerDNS-Admin](https://github.com/ngoduykhanh/PowerDNS-Admin) 
+ - [pschiffe/docker-pdns](https://github.com/pschiffe/docker-pdns)
  - [Authoritative Server Settings](https://doc.powerdns.com/authoritative/settings.html) page on PowerDNS docs.
 
 ## Credits
