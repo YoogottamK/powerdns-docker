@@ -1,0 +1,48 @@
+version: "3.9"
+networks:
+  pdns_nw:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+       - subnet: 172.31.255.0/24
+services:
+  mysql:
+    image: "mariadb"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    networks:
+      pdns_nw:
+        ipv4_address: 172.31.255.2
+  pdns:
+    image: "pschiffe/pdns-mysql"
+    depends_on:
+      - mysql
+    environment:
+      - PDNS_gmysql_password=${DB_PASSWORD}
+      - PDNS_gmysql_dbname=${DB_NAME}
+      - PDNS_api=yes
+      - PDNS_api_key=${NS_API_KEY}
+      - PDNS_webserver=yes
+      - PDNS_webserver-address=0.0.0.0
+      - PDNS_webserver_allow_from=172.31.255.4
+      - PDNS_version_string=anonymous
+      - PDNS_default_ttl=1500
+      - PDNS_default_soa_content=${NS_MNAME} ${NS_RNAME} 0 10800 3600 604800 3600
+    ports:
+      - "53:53"
+      - "53:53/udp"
+    networks:
+      pdns_nw:
+        ipv4_address: 172.31.255.3
+  admin:
+    image: "ngoduykhanh/powerdns-admin"
+    depends_on:
+      - pdns
+    environment:
+      - SQLALCHEMY_DATABASE_URI=mysql://root:${DB_PASSWORD}@mysql/${DB_NAME}
+    ports:
+      - "9191:80"
+    networks:
+      pdns_nw:
+        ipv4_address: 172.31.255.4
